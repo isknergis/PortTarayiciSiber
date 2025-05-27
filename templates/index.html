@@ -110,6 +110,36 @@
                 {% endfor %}
             </ul>
         {% endif %}
+        
+        {% if recent_scans %} {# Eğer recent_scans (veritabanından gelen) listesi boş değilse #}
+            <h2>Geçmiş Tarama Kayıtları:</h2>
+            <table>
+                <thead> {# Tablonun başlık kısmı #}
+                    <tr> {# Tablo satırı #}
+                        <th>ID</th> {# Tablo başlık hücresi #}
+                        <th>Hedef IP</th>
+                        <th>Port</th>
+                        <th>Durum</th>
+                        <th>Tarama Zamanı</th>
+                    </tr>
+                </thead>
+                <tbody> {# Tablonun veri kısmı #}
+                    {% for scan in recent_scans %} {# recent_scans listesindeki her bir kaydı tek tek dolaş #}
+                        <tr>
+                            <td>{{ scan.id }}</td> {# Kaydın ID'si #}
+                            <td>{{ scan.target_ip }}</td> {# Kaydın hedef IP'si #}
+                            <td>{{ scan.port }}</td> {# Kaydın portu #}
+                            {# Duruma göre farklı bir CSS sınıfı (renk) uygula #}
+                            <td class="{{ 'open' if scan.status == 'Açık' else 'closed' }}">{{ scan.status }}</td>
+                            {# Zamanı daha okunur bir formatta göster #}
+                            <td>{{ scan.scan_time.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %} {# Eğer hiç geçmiş tarama kaydı yoksa #}
+            <p style="text-align: center; margin-top: 20px;">Henüz geçmiş tarama kaydı bulunmuyor.</p>
+        {% endif %}
     </div>
 </body>
 </html>
